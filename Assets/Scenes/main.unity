@@ -642,7 +642,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'GAME OVER
 
-    Press Space to Restart'
+    Press Space to Restart or Backspace to go back to Menu'
 --- !u!222 &474497241
 CanvasRenderer:
   m_ObjectHideFlags: 0

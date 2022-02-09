@@ -41,6 +41,7 @@ public class PersistenceManager : MonoBehaviour
         data.playerName = playerName;
 
         string json = JsonUtility.ToJson(data);
+        Debug.Log(json);
 
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
@@ -48,6 +49,7 @@ public class PersistenceManager : MonoBehaviour
     public void LoadHighScorer()
     {
         string path = Application.persistentDataPath + "/savefile.json";
+        Debug.Log(path);
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
