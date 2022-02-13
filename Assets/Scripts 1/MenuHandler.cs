@@ -11,30 +11,37 @@ public class MenuHandler : MonoBehaviour
     public Button startButton;
     public TMPro.TMP_Text menuHighScoreText;
 
-    private void Start()
+    void Start()
     {
-        if (PersistenceManager.Instance != null)
-        {
-            if (PersistenceManager.Instance.highScorer == "<NONE>") PersistenceManager.Instance.highScorer = PersistenceManager.Instance.playerName;
-        }
-        menuHighScoreText.text = $"Best Score : {PersistenceManager.Instance.highScorer} : {PersistenceManager.Instance.highScore}";
+        menuHighScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0]} : {PersistenceManager.Instance.GetHighScores()[0]}";
 
+        string pname = PersistenceManager.Instance.GetPlayerName();
+        Debug.Log(pname);
+        nameInput.text = pname;
+
+        if (pname != "")
+        {
+            startButton.gameObject.SetActive(true);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            SceneManager.LoadScene(2);
+        }
     }
     public void StartNew()
     {
-        if (PersistenceManager.Instance != null)
-        {
-            if (PersistenceManager.Instance.highScorer == "<NONE>") PersistenceManager.Instance.highScorer = PersistenceManager.Instance.playerName;
-        }
-        menuHighScoreText.text = $"Best Score : {PersistenceManager.Instance.highScorer} : {PersistenceManager.Instance.highScore}";
-
-        SceneManager.LoadScene(1);
+         SceneManager.LoadScene(1);
     }
+
 
     public void NameInputEntered()
     {
         string playerName = nameInput.text;
-        PersistenceManager.Instance.playerName = playerName;
+        PersistenceManager.Instance.SetPlayer(playerName);
 
         Debug.Log(playerName);
         startButton.gameObject.SetActive(true);
@@ -42,7 +49,7 @@ public class MenuHandler : MonoBehaviour
 
     public void QuitGame()
     {
-        PersistenceManager.Instance.SaveHighScorer();
+        PersistenceManager.Instance.SavePersistentData();
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
 #else

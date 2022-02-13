@@ -19,7 +19,11 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+    //private List<string> highScorers = new List<string>();
+    //private List<int> highScores = new List<int>();
+    //private string playerName;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +41,7 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
-        highScoreText.text = $"Best Score : {PersistenceManager.Instance.highScorer} : {PersistenceManager.Instance.highScore}";
+        highScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0]} : {PersistenceManager.Instance.GetHighScores()[0]}";
     }
 
     private void Update()
@@ -72,18 +76,26 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
-        if (m_Points > PersistenceManager.Instance.highScore) {
+        if (m_Points > PersistenceManager.Instance.GetHighScores()[0]) {
             Debug.Log("Here");
-            PersistenceManager.Instance.highScore = m_Points;
-            PersistenceManager.Instance.highScorer = PersistenceManager.Instance.playerName;
+            PersistenceManager.Instance.AddNewHighScorer(m_Points);
+            //PersistenceManager.Instance.highScore = m_Points;
+            //PersistenceManager.Instance.highScorer = PersistenceManager.Instance.playerName;
         }
-        highScoreText.text = $"Best Score : {PersistenceManager.Instance.highScorer} : {PersistenceManager.Instance.highScore}";
+        highScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0]} : {PersistenceManager.Instance.GetHighScores()[0]}";
     }
+ 
+  
 
+    private void Load()
+    {
+        PersistenceManager.Instance.LoadPersistentData();
+       
+    }
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
-        PersistenceManager.Instance.SaveHighScorer();
+        PersistenceManager.Instance.SavePersistentData();
     }
 }
