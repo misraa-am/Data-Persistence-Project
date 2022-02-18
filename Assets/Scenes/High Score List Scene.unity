@@ -1252,6 +1252,14 @@ MonoBehaviour:
   highScoreList:
   - {fileID: 423570875}
   - {fileID: 1971521993}
+  - {fileID: 647943883}
+  - {fileID: 2058808801}
+  - {fileID: 341564584}
+  - {fileID: 1498894414}
+  - {fileID: 148036244}
+  - {fileID: 23156424}
+  - {fileID: 424755015}
+  - {fileID: 1104692289}
 --- !u!4 &1960868499
 Transform:
   m_ObjectHideFlags: 0
