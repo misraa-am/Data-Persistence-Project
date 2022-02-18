@@ -41,7 +41,8 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
-        highScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0]} : {PersistenceManager.Instance.GetHighScores()[0]}";
+        if (PersistenceManager.Instance.GetHighScorers().Count > 0)
+            highScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0].playerName} : {PersistenceManager.Instance.GetHighScorers()[0].score}";
     }
 
     private void Update()
@@ -76,13 +77,14 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
-        if (m_Points > PersistenceManager.Instance.GetHighScores()[0]) {
+        if (m_Points > PersistenceManager.Instance.GetHighScorers()[0].score) {
             Debug.Log("Here");
             PersistenceManager.Instance.AddNewHighScorer(m_Points);
             //PersistenceManager.Instance.highScore = m_Points;
             //PersistenceManager.Instance.highScorer = PersistenceManager.Instance.playerName;
         }
-        highScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0]} : {PersistenceManager.Instance.GetHighScores()[0]}";
+        if (PersistenceManager.Instance.GetHighScorers().Count > 0)
+            highScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0].playerName} : {PersistenceManager.Instance.GetHighScorers()[0].score}";
     }
  
   

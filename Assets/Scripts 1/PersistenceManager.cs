@@ -8,7 +8,7 @@ public class PersistenceManager : MonoBehaviour
     public static PersistenceManager Instance;
 
     [System.Serializable]
-    private class PlayerScores
+    public class PlayerScores
     {
         //public PlayerScores(string nm, int s)
         //{
@@ -20,8 +20,8 @@ public class PersistenceManager : MonoBehaviour
     }
 
     private List<PlayerScores> highPlayerScores = new List<PlayerScores>();
-    private List<string> highScorers = new List<string>();
-    private List<int> highScores = new List<int>();
+    //private List<string> highScorers = new List<string>();
+    //private List<int> highScores = new List<int>();
     private string playerName = "";
 
     private void Awake()
@@ -40,14 +40,14 @@ public class PersistenceManager : MonoBehaviour
 
     }
      
-     public List<string> GetHighScorers()
+     public List<PlayerScores> GetHighScorers()
     {
-        return highScorers;
+        return highPlayerScores;
     }
-    public List<int> GetHighScores()
-    {
-        return highScores;
-    }
+    //public List<int> GetHighScores()
+    //{
+    //    return highScores;
+    //}
 
     public string GetPlayerName() { return playerName;  }
 
@@ -55,11 +55,13 @@ public class PersistenceManager : MonoBehaviour
     {
         playerName = pname;
 
-        Debug.Log("setting player " + highScorers.Count);
-        if (highScorers[0] == "")
+        Debug.Log("setting player " + highPlayerScores.Count);
+        if (highPlayerScores.Count == 0)
         {
-            highScorers[0] = playerName;
-            highScores[0] = 0;
+            PlayerScores pl = new PlayerScores();
+            pl.playerName = playerName;
+            pl.score = 0;
+            highPlayerScores.Insert(0, pl);
         }
     }
 
@@ -74,27 +76,10 @@ public class PersistenceManager : MonoBehaviour
     public void AddNewHighScorer(int score)
     {
         Debug.Log("Adding new high " + playerName + " : " + score);
-        Debug.Log("On entry" + highScorers.Count);
-
-
-        if (highScorers.Contains(playerName))
-        {
-            int idx1 = highScorers.IndexOf(playerName);
-            highScorers.Remove(playerName);
-            highScores.RemoveAt(idx1);
-
-        }
-        if (highScorers.Count > 9)
-        {
-            highScorers.RemoveAt(9);
-            highScores.RemoveAt(9);
-        }
-        highScorers.Insert(0, playerName);
-        highScores.Insert(0, score);
+        Debug.Log("On entry" + highPlayerScores.Count);
 
         int idx = HighScorersContains(playerName);
         if ( idx >= 0) { 
-        
             highPlayerScores.RemoveAt(idx);
         }
         if (highPlayerScores.Count > 9)
@@ -109,47 +94,50 @@ public class PersistenceManager : MonoBehaviour
         Debug.Log("Insert new: " + highPlayerScores);
         highPlayerScores.Insert(0, pl);
 
-        Debug.Log("On exit " + highScorers.Count);
+        Debug.Log("On exit " + highPlayerScores.Count);
 
     }
 
     public void GameOver(int score)
     {
         Debug.Log("Entering Game Over " + playerName + " : " + score);
-        Debug.Log("On entry" + highScorers.Count);
+        Debug.Log("On entry" + highPlayerScores.Count);
 
+        int idx = HighScorersContains(playerName);
 
-        if (highScorers.Contains(playerName))
+        if (idx >= 0) highPlayerScores.RemoveAt(idx);
+        //{
+        //    Debug.Log("has player name");
+        //    if (score > highPlayerScores[idx].score)
+        //    {
+        //        highPlayerScores[idx].score = score;
+        //    }
+        //}
+        //else
+        //{
+        Debug.Log("No player name");
+
+        bool lowerFound = false;
+        idx = 0;
+        while (idx < highPlayerScores.Count && !lowerFound)
         {
-            Debug.Log("has player name");
-            int idx = highScorers.IndexOf(playerName);
-            if (score > highScores[idx])
-            {
-                highScores[idx] = score;
-            }
+            if (highPlayerScores[idx].score < score) lowerFound = true;
+            else idx++;
         }
-        else
+        if (lowerFound || idx < 9)
         {
-            Debug.Log("No player name");
-
-            bool lowerFound = false;
-            int idx = 0;
-            
-            while (idx < highScores.Count && !lowerFound)
+            if (idx == 9)
             {
-                if (highScores[idx] < score) lowerFound = true;
-                else idx++;
+                highPlayerScores.RemoveAt(9);
+                highPlayerScores.RemoveAt(9);
             }
-            if (lowerFound || idx < 9)
-            {
-                if (idx == 9)
-                {
-                    highScorers.RemoveAt(9);
-                    highScores.RemoveAt(9);
-                }
-                highScorers.Insert(idx, playerName);
-                highScores.Insert(idx, score);
-            }
+            PlayerScores pl = new PlayerScores();
+            pl.playerName = playerName;
+            pl.score = score;
+            highPlayerScores.Insert(idx, pl);
+            //highPlayerScores.Insert(idx, playerName);
+            //highPlayerScores.Insert(idx, score);
+            //}
         }
 
     }
@@ -166,8 +154,8 @@ public class PersistenceManager : MonoBehaviour
     {
         SaveData data = new SaveData();
         data.highPlayerScores = highPlayerScores;
-        data.highScores = highScores;
-        data.highScorers = highScorers;
+        //data.highScores = highScores;
+        //data.highScorers = highScorers;
         data.playerName = playerName;
 
         Debug.Log("saving data; hiplayerscores count " + highPlayerScores.Count);
@@ -188,15 +176,21 @@ public class PersistenceManager : MonoBehaviour
 
             print("here load 1 count: " + data.highScorers.Count);
             highPlayerScores = data.highPlayerScores;
-            highScorers = data.highScorers;
-            highScores = data.highScores;
+            //highScorers = data.highScorers;
+            //highScores = data.highScores;
             playerName = data.playerName;
         }
-        else
-        {
-            highScores.Insert(0, 0);
-            highScorers.Insert(0, "");
-        }
+        //else
+        //{
+        //    PlayerScores pl = new PlayerScores();
+        //    pl.playerName = "";
+        //    pl.score = 0;
+        //    highPlayerScores.Insert(0, pl);
+
+
+        //    //highScores.Insert(0, 0);
+        //    //highScorers.Insert(0, "");
+        //}
     }
 
 }

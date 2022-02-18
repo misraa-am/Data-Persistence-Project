@@ -24,8 +24,8 @@ public class HighScoreListDisplay : MonoBehaviour
 
     void DisplayList()
     {
-        List<string> scorers = PersistenceManager.Instance.GetHighScorers();
-        List<int> scores = PersistenceManager.Instance.GetHighScores();
+        List<PersistenceManager.PlayerScores> scorers = PersistenceManager.Instance.GetHighScorers();
+        //List<int> scores = PersistenceManager.Instance.GetHighScores();
 
         for (int i = 0; i < scorers.Count; i++)
         {
@@ -33,7 +33,7 @@ public class HighScoreListDisplay : MonoBehaviour
             Text scoreText = highScoreList[i];
             //Debug.Log(scoreText.name);
             //Debug.Log(scorers[i] + "\t\t: " + scores[i]);
-            scoreText.text = (scorers[i] + "\t\t: " + scores[i]);
+            scoreText.text = (scorers[i].playerName + "\t\t: " + scorers[i].score);
         }
     }
 }

@@ -13,7 +13,8 @@ public class MenuHandler : MonoBehaviour
 
     void Start()
     {
-        menuHighScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0]} : {PersistenceManager.Instance.GetHighScores()[0]}";
+        if (PersistenceManager.Instance.GetHighScorers().Count > 0)
+            menuHighScoreText.text = $"Best Score : {PersistenceManager.Instance.GetHighScorers()[0].playerName} : {PersistenceManager.Instance.GetHighScorers()[0].score}";
 
         string pname = PersistenceManager.Instance.GetPlayerName();
         Debug.Log(pname);
